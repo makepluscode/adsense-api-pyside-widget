@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QKeyEvent
 import sys
 from adsense_data import AdSenseDataManager, DashboardData
 
@@ -11,12 +11,16 @@ class AdSenseWidget(QWidget):
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.initUI()
         
-        # 5분마다 데이터 갱신
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_data)
-        self.timer.start(300000)
+        self.timer.start(600000)  # 10분
         
         self.update_data()
+
+    def keyPressEvent(self, event: QKeyEvent):
+        if event.key() == Qt.Key_Escape or event.key() == Qt.Key_Q:
+            self.close()
+            QApplication.quit()
 
     def initUI(self):
         self.setFixedSize(400, 80)
