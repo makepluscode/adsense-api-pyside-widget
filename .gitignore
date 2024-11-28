@@ -44,4 +44,9 @@ logs/
 
 # Local development settings
 config.local.json
-settings.local.json 
+settings.local.json
+
+# PyInstaller
+*.spec
+build/
+dist/ 
