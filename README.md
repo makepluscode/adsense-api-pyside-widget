@@ -5,15 +5,16 @@ Python script to automatically check your daily Google AdSense earnings using th
 
 ## Features
 - Real-time AdSense earnings check
-- OAuth 2.0 authentication
+- OAuth 2.0 authentication 
 - Automatic token refresh
-- JSON formatted output
+- Desktop widget display
 - Error handling
 
 ## Prerequisites
 - Python 3.x
 - Google AdSense account
 - Google Cloud Console project with AdSense API enabled
+- PySide6
 
 ## Installation
 1. Clone the repository
@@ -22,54 +23,51 @@ git clone https://github.com/yourusername/adsense-revenue-tracker.git
 cd adsense-revenue-tracker
 ```
 
-2. Install required packages
+2. Run install.bat to set up the environment
 ```bash
-pip install google-auth-oauthlib google-api-python-client
+install.bat
 ```
-
-3. Set up Google Cloud Console
-- Create a project at [Google Cloud Console](https://console.cloud.google.com)
-- Enable AdSense API
-- Create OAuth 2.0 credentials
-- Download credentials.json
 
 ## Configuration
-1. Place your `credentials.json` in the project directory
-2. Run the script first time to authorize:
-```bash
-python main.py
+1. Create a project at [Google Cloud Console](https://console.cloud.google.com)
+2. Enable AdSense API
+3. Create OAuth 2.0 credentials (Desktop app)
+4. Download and rename credentials as `credentials.json`
+5. Place `credentials.json` in the `config` directory
+6. Create `.env` file in `config` directory with following content:
 ```
+CREDENTIALS_FILE=config/credentials.json
+TOKEN_FILE=config/token.pickle
+REFRESH_INTERVAL=600000
+WIDGET_WIDTH=400
+WIDGET_HEIGHT=100
+```
+
+## Environment Variables
+- `CREDENTIALS_FILE`: Path to Google OAuth credentials file
+- `TOKEN_FILE`: Path to store OAuth token
+- `REFRESH_INTERVAL`: Data refresh interval in milliseconds (default: 600000 = 10 minutes)
+- `WIDGET_WIDTH`: Widget window width in pixels
+- `WIDGET_HEIGHT`: Widget window height in pixels
 
 ## Usage
-Simply run:
+Run the application:
 ```bash
 python main.py
 ```
 
-Example output:
-```json
-{
-  "date": "2024-11-28",
-  "estimated_earnings": 12.34,
-  "currency": "USD"
-}
-```
+The widget will appear in the top-right corner of your screen showing:
+- Today's earnings
+- Yesterday's earnings
+- Last 7 days earnings
+- This month's earnings
 
-## Error Handling
-The script handles common errors:
-- No AdSense account found
-- API authentication errors
-- No data available
-
-## Contributing
-Feel free to open issues or submit pull requests.
+To close the widget, select it and press ESC or Q.
 
 ## License
 MIT License
 
-## Author
-Your Name
-
 ## Acknowledgments
 - Google AdSense API
 - Google Cloud Platform
+- PySide6
