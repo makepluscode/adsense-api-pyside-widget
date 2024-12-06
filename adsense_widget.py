@@ -83,7 +83,9 @@ class AdSenseWidget(QWidget):
         return layout
 
     def update_data(self):
+        print("\n[DEBUG] === Widget: Updating data ===")
         data = self.data_manager.get_dashboard_data()
+        print(f"[DEBUG] Widget received data: {data}")
         
         earnings_data = [
             (data.today, True),
@@ -92,21 +94,29 @@ class AdSenseWidget(QWidget):
             (data.this_month, True)
         ]
         
-        for column, (earnings, has_comparison) in zip(self.columns, earnings_data):
+        for i, (earnings, has_comparison) in enumerate(earnings_data):
+            print(f"\n[DEBUG] Updating column {i}")
+            print(f"[DEBUG] Earnings: {earnings}")
+            print(f"[DEBUG] Has comparison: {has_comparison}")
+
+            column = self.columns[i]
             amount_label = column.itemAt(1).widget()
             amount_label.setText(f"US${earnings.amount:.2f}")
             
             comparison_label = column.itemAt(2).widget()
             if has_comparison and earnings.comparison:
                 percentage = earnings.comparison.percentage
+                print(f"[DEBUG] Comparison percentage: {percentage}")
                 if percentage is not None:
                     sign = "▲" if percentage > 0 else "▼"
                     comparison_label.setText(f"{sign} {abs(percentage):.1f}%")
                     color = "#00FF00" if percentage > 0 else "#FF4444"
                     comparison_label.setStyleSheet(f"color: {color}")
+                    print(f"[DEBUG] Set comparison label: {sign} {abs(percentage):.1f}%")
             else:
                 comparison_label.setText("")
+                print("[DEBUG] No comparison data, label cleared")
 
-        # 업데이트 시간 갱신
         current_time = datetime.now().strftime("updated %Y-%m-%d %H:%M")
         self.update_time_label.setText(current_time)
+        print(f"[DEBUG] Update completed at {current_time}")

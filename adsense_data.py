@@ -25,13 +25,22 @@ class AdSenseDataManager:
         self._get_adsense_data = get_adsense_data
         self._last_update = None
         self._cache = None
+        self._previous_data = None  # 이전 데이터 저장용
+
+    def calculate_comparison(self, current: float, previous: float) -> Comparison:
+        """수익 비교 데이터 계산"""
+        value = current - previous
+        percentage = (value / previous * 100) if previous != 0 else 0.0
+        return Comparison(value=value, percentage=percentage)
 
     def get_dashboard_data(self) -> DashboardData:
         """최신 대시보드 데이터 반환"""
         try:
+            print("\n[DEBUG] === Data Manager: Fetching data ===")
             raw_data = self._get_adsense_data()
+            print(f"[DEBUG] Raw data received: {raw_data}")
             
-            return DashboardData(
+            result = DashboardData(
                 today=EarningsData(
                     amount=raw_data['today']['earnings'],
                     comparison=Comparison(**raw_data['today']['comparison'])
@@ -48,8 +57,11 @@ class AdSenseDataManager:
                     comparison=Comparison(**raw_data['this_month']['comparison'])
                 )
             )
+            print(f"[DEBUG] Processed dashboard data: {result}")
+            return result
+
         except Exception as e:
-            print(f"Error fetching AdSense data: {e}")
+            print(f"[ERROR] Data Manager Error: {str(e)}")
             return self._get_empty_data()
 
     def _get_empty_data(self) -> DashboardData:
